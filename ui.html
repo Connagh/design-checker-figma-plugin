@@ -1,0 +1,33 @@
+<h2>Frame & Layer Checker</h2>
+<form id="criteriaForm">
+  <label><input type="checkbox" id="checkUnattachedText"> Check for unattached text</label><br>
+  <label><input type="checkbox" id="checkCodeConnect"> Check for components without Code Connect</label><br>
+</form>
+<button id="start">Start</button>
+<button id="cancel">Cancel</button>
+
+<script>
+  // Handle checkbox states
+  window.onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (msg.type === 'load-selections') {
+      document.getElementById('checkUnattachedText').checked = msg.checkUnattachedText;
+      document.getElementById('checkCodeConnect').checked = msg.checkCodeConnect;
+    }
+  };
+
+  document.getElementById('start').onclick = () => {
+    const checkUnattachedText = document.getElementById('checkUnattachedText').checked;
+    const checkCodeConnect = document.getElementById('checkCodeConnect').checked;
+
+    parent.postMessage({ pluginMessage: {
+      type: 'start-processing',
+      checkUnattachedText,
+      checkCodeConnect
+    } }, '*');
+  };
+
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+  };
+</script>
